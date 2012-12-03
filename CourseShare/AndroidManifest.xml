@@ -12,8 +12,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".EntryActivity"
-            android:label="@string/title_activity_entry" >
+            android:name=".NavigationActivity"
+            android:label="@string/title_activity_navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
