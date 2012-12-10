@@ -26,10 +26,7 @@
         </activity>
         <activity
             android:name=".Recorder"
-            android:label="@string/title_activity_recorder" 
-            android:screenOrientation="landscape">
-          	<!-- configure this activity to use landscape orientation -->
-            
+            android:label="@string/title_activity_recorder" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.cs434.courseshare.NavigationActivity" />
