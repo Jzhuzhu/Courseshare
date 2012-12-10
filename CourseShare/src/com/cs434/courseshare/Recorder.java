@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -16,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -24,17 +24,15 @@ public class Recorder extends Activity {
 	private static String mFilename = null;
 	private static int UUID;
 	private static String TAG = "Recorder";
-	private RecordService rservice;
     
 	private Camera mCamera;
     private CameraPreview mPreview;
 	
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) { 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cs_recorder);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        
+
         // Create an instance of Camera
         mCamera = getCameraInstance();
         
@@ -44,10 +42,25 @@ public class Recorder extends Activity {
         preview.addView(mPreview);
         
         //Set the listeners on the buttons
-        RecordButton mRecordButton = (RecordButton) findViewById(R.id.btnStart);
-        
+        Button mRecordButton = (Button) findViewById(R.id.btnStart);
+        OnClickListener buttonListener = new View.OnClickListener() {
+			boolean mStartRecording = true;
+			@Override
+			public void onClick(View v) {
+				Button button = (Button) findViewById(R.id.btnStart);
+				onRecord(mStartRecording);
+	            if (mStartRecording) {
+	                button.setText("Stop");
+	            } else {
+	                button.setText("Start");
+	            }
+	            mStartRecording = !mStartRecording;
+			}
+		};
+		mRecordButton.setOnClickListener(buttonListener);
         Intent intent = getIntent();
         if(intent.getIntExtra("UUID",-1) == -1){
+        	UUID = 2468;
         	//No Recording ID passed in
         	//Ping server and assign new UUID
         }
@@ -146,26 +159,7 @@ public class Recorder extends Activity {
         	stopService(bgrecord);
         }
     }
-	class RecordButton extends Button {
-        boolean mStartRecording = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    setText("Stop");
-                } else {
-                    setText("Start");
-                }
-                mStartRecording = !mStartRecording;
-            }
-        };
-        public RecordButton(Context ctx) {
-            super(ctx);
-            setText("Start");
-            setOnClickListener(clicker);
-        }
-	}
+	
 	@Override
     protected void onPause() {
         super.onPause(); 

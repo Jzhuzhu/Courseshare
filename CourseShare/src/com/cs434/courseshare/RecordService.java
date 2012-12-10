@@ -10,12 +10,12 @@ import android.media.MediaRecorder;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class RecordService extends Service {
 	private MediaRecorder mRecorder = null;
 	private int UUID;
 	private static String mFileName = null;
-	String timeformat = "yyyy-MM-dd_HH:mm:ss";
 	
 	private void startRecording() {
 		mRecorder = new MediaRecorder();
@@ -63,6 +63,7 @@ public class RecordService extends Service {
     	UUID = intent.getIntExtra("UUID",-1);
     	mFileName = String.valueOf(UUID).concat("-") + timestamp + ".jpg";
     	startRecording();
+    	Toast.makeText(this, "Service started" ,Toast.LENGTH_SHORT).show();
     	//Continues running until explicitly stopped
         return START_STICKY;
     }
@@ -71,7 +72,7 @@ public class RecordService extends Service {
     public void onDestroy(){
     	super.onDestroy();
     	stopRecording();
-    	
+    	Toast.makeText(this, "Service stopped" ,Toast.LENGTH_SHORT).show();
     }
  
 }
