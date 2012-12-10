@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -24,7 +25,6 @@ public class Recorder extends Activity {
 	private static int UUID;
 	private static String TAG = "Recorder";
 	private RecordService rservice;
-	private RecordButton mRecordButton = null;
     
 	private Camera mCamera;
     private CameraPreview mPreview;
@@ -42,6 +42,9 @@ public class Recorder extends Activity {
         mPreview = new CameraPreview(this, mCamera);
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mPreview);
+        
+        //Set the listeners on the buttons
+        RecordButton mRecordButton = (RecordButton) findViewById(R.id.btnStart);
         
         Intent intent = getIntent();
         if(intent.getIntExtra("UUID",-1) == -1){
@@ -134,15 +137,35 @@ public class Recorder extends Activity {
     }
     
 	private void onRecord(boolean start) {
+        Intent bgrecord = new Intent(this, RecordService.class);
+        bgrecord.putExtra("UUID", UUID);
         if (start) {
-        	//Call intent here to start service, add UUID
-        	Intent bgrecord = new Intent(this, RecordService.class);
+        	//Beging background recording service
             startService(bgrecord);
         } else {
-            stopRecording();
+        	stopService(bgrecord);
         }
     }
-	
+	class RecordButton extends Button {
+        boolean mStartRecording = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    setText("Stop");
+                } else {
+                    setText("Start");
+                }
+                mStartRecording = !mStartRecording;
+            }
+        };
+        public RecordButton(Context ctx) {
+            super(ctx);
+            setText("Start");
+            setOnClickListener(clicker);
+        }
+	}
 	@Override
     protected void onPause() {
         super.onPause(); 

@@ -1,6 +1,7 @@
 package com.cs434.courseshare;
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
@@ -26,5 +27,7 @@ public class NavigationActivity extends Activity {
     }
     
     public void recordClick(View view) {
+    	Intent record = new Intent(this, Recorder.class);
+    	startActivity(record);
     }
 }
