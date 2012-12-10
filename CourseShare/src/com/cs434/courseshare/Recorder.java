@@ -58,10 +58,11 @@ public class Recorder extends Activity {
 			}
 		};
 		mRecordButton.setOnClickListener(buttonListener);
-        Intent intent = getIntent();
+        
+		//Find session UUID
+		Intent intent = getIntent();
         if(intent.getIntExtra("UUID",-1) == -1){
         	UUID = 2468;
-        	//No Recording ID passed in
         	//Ping server and assign new UUID
         }
         
